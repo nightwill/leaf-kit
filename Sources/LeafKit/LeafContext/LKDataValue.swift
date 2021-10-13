@@ -14,9 +14,14 @@ internal struct LKDataValue: LeafDataRepresentable {
     var leafData: LeafData { container.leafData }
         
     var cached: Bool {
-        if case .variable(_, .none) = container { return false }
-        if case .literal(let d) = container, d.isLazy { return false }
-        return true
+        switch container {
+        case .variable(_, .none):
+            return false
+        case .literal(let d) where d.isLazy:
+            return false
+        default:
+            return true
+        }
     }
     
     /// Coalesce to a literal
